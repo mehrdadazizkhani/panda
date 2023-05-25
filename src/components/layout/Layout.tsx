@@ -21,6 +21,7 @@ import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
+import { Outlet, useLocation, Link } from "react-router-dom";
 
 const drawerWidth = 240;
 
@@ -93,20 +94,24 @@ const Drawer = styled(MuiDrawer, {
   }),
 }));
 
-interface LayoutProps {
-  children: React.ReactNode;
-}
-
-export default function Layout({ children }: LayoutProps) {
+export default function Layout() {
   const theme = useTheme();
   const [open, setOpen] = React.useState(true);
   const { t } = useTranslation();
+
   const listItems = [
-    { id: 1, title: t("dashboard.title"), icon: <DashboardIcon /> },
-    { id: 2, title: t("todo.title"), icon: <PlaylistAddIcon /> },
-    { id: 3, title: t("weather.title"), icon: <CloudIcon /> },
-    { id: 4, title: t("profile.title"), icon: <ManageAccountsIcon /> },
+    { id: 1, title: t("dashboard.title"), icon: <DashboardIcon />, to: "/" },
+    { id: 2, title: t("todos.title"), icon: <PlaylistAddIcon />, to: "/todo" },
+    { id: 3, title: t("weather.title"), icon: <CloudIcon />, to: "/weather" },
+    {
+      id: 4,
+      title: t("profile.title"),
+      icon: <ManageAccountsIcon />,
+      to: "/profile",
+    },
   ];
+
+  const location = useLocation();
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -151,8 +156,15 @@ export default function Layout({ children }: LayoutProps) {
         <Divider />
         <List>
           {listItems.map((item) => (
-            <ListItem key={item.id} disablePadding sx={{ display: "block" }}>
+            <ListItem
+              key={item.id}
+              disablePadding
+              sx={{ display: "block" }}
+              component={Link}
+              to={item.to}
+            >
               <ListItemButton
+                selected={location.pathname === item.to}
                 sx={{
                   minHeight: 48,
                   justifyContent: open ? "initial" : "center",
@@ -183,12 +195,12 @@ export default function Layout({ children }: LayoutProps) {
           display: "flex",
           flexGrow: 1,
           p: 3,
-          pt: 8,
+          pt: 11,
           height: "100vh",
           justifyContent: "center",
         }}
       >
-        {children}
+        <Outlet />
       </Box>
     </Box>
   );
