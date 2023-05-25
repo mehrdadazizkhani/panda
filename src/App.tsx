@@ -1,4 +1,6 @@
+import Layout from "./components/layout/Layout";
+
 function App() {
-  return <div></div>;
+  return <Layout>sdf</Layout>;
 }
 export default App;
