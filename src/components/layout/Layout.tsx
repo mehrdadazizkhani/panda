@@ -21,6 +21,7 @@ import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import { Outlet, useLocation, Link } from "react-router-dom";
+import DataProvider from "../../context/DataProvider";
 
 const drawerWidth = 240;
 
@@ -120,81 +121,83 @@ export default function Layout() {
   };
 
   return (
-    <Box sx={{ display: "flex" }}>
-      <CssBaseline />
-      <AppBar open={open}>
-        <Toolbar>
-          <IconButton
-            color="inherit"
-            aria-label="open drawer"
-            onClick={handleDrawerOpen}
-            edge="start"
-            sx={{
-              marginRight: 5,
-              ...(open && { display: "none" }),
-            }}
-          >
-            <MenuIcon />
-          </IconButton>
-          <Typography variant="h6" noWrap component="div">
-            {t(`appTitle`)}
-          </Typography>
-        </Toolbar>
-      </AppBar>
-      <Drawer variant="permanent" open={open}>
-        <DrawerHeader>
-          <IconButton onClick={handleDrawerClose}>
-            {theme.direction === "rtl" ? (
-              <ChevronRightIcon />
-            ) : (
-              <ChevronLeftIcon />
-            )}
-          </IconButton>
-        </DrawerHeader>
-        <Divider />
-        <List>
-          {listItems.map((item) => (
-            <ListItemButton
-              key={item.id}
-              selected={location.pathname === item.to}
+    <DataProvider>
+      <Box sx={{ display: "flex" }}>
+        <CssBaseline />
+        <AppBar open={open}>
+          <Toolbar>
+            <IconButton
+              color="inherit"
+              aria-label="open drawer"
+              onClick={handleDrawerOpen}
+              edge="start"
               sx={{
-                minHeight: 48,
-                justifyContent: open ? "initial" : "center",
-                px: 2.5,
+                marginRight: 5,
+                ...(open && { display: "none" }),
               }}
-              component={Link}
-              to={item.to}
             >
-              <ListItemIcon
+              <MenuIcon />
+            </IconButton>
+            <Typography variant="h6" noWrap component="div">
+              {t(`appTitle`)}
+            </Typography>
+          </Toolbar>
+        </AppBar>
+        <Drawer variant="permanent" open={open}>
+          <DrawerHeader>
+            <IconButton onClick={handleDrawerClose}>
+              {theme.direction === "rtl" ? (
+                <ChevronRightIcon />
+              ) : (
+                <ChevronLeftIcon />
+              )}
+            </IconButton>
+          </DrawerHeader>
+          <Divider />
+          <List>
+            {listItems.map((item) => (
+              <ListItemButton
+                key={item.id}
+                selected={location.pathname === item.to}
                 sx={{
-                  minWidth: 0,
-                  mr: open ? 3 : "auto",
-                  justifyContent: "center",
+                  minHeight: 48,
+                  justifyContent: open ? "initial" : "center",
+                  px: 2.5,
                 }}
+                component={Link}
+                to={item.to}
               >
-                {item.icon}
-              </ListItemIcon>
-              <ListItemText
-                primary={item.title}
-                sx={{ opacity: open ? 1 : 0 }}
-              />
-            </ListItemButton>
-          ))}
-        </List>
-      </Drawer>
-      <Box
-        component="main"
-        sx={{
-          display: "flex",
-          flexGrow: 1,
-          p: 3,
-          pt: 11,
-          height: "100vh",
-          justifyContent: "center",
-        }}
-      >
-        <Outlet />
+                <ListItemIcon
+                  sx={{
+                    minWidth: 0,
+                    mr: open ? 3 : "auto",
+                    justifyContent: "center",
+                  }}
+                >
+                  {item.icon}
+                </ListItemIcon>
+                <ListItemText
+                  primary={item.title}
+                  sx={{ opacity: open ? 1 : 0 }}
+                />
+              </ListItemButton>
+            ))}
+          </List>
+        </Drawer>
+        <Box
+          component="main"
+          sx={{
+            display: "flex",
+            flexGrow: 1,
+            p: 3,
+            pt: 11,
+            height: "100vh",
+            justifyContent: "center",
+          }}
+        >
+          <Outlet />
+        </Box>
       </Box>
-    </Box>
+    </DataProvider>
   );
 }
