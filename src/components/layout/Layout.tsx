@@ -21,7 +21,7 @@ import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
-import { Outlet, useLocation, Link } from "react-router-dom";
+import { Outlet, useLocation, Link, NavLink } from "react-router-dom";
 
 const drawerWidth = 240;
 
@@ -51,7 +51,6 @@ const DrawerHeader = styled("div")(({ theme }) => ({
   alignItems: "center",
   justifyContent: "flex-end",
   padding: theme.spacing(0, 1),
-  // necessary for content to be below app bar
   ...theme.mixins.toolbar,
 }));
 
@@ -156,36 +155,31 @@ export default function Layout() {
         <Divider />
         <List>
           {listItems.map((item) => (
-            <ListItem
+            <ListItemButton
               key={item.id}
-              disablePadding
-              sx={{ display: "block" }}
+              selected={location.pathname === item.to}
+              sx={{
+                minHeight: 48,
+                justifyContent: open ? "initial" : "center",
+                px: 2.5,
+              }}
               component={Link}
               to={item.to}
             >
-              <ListItemButton
-                selected={location.pathname === item.to}
+              <ListItemIcon
                 sx={{
-                  minHeight: 48,
-                  justifyContent: open ? "initial" : "center",
-                  px: 2.5,
+                  minWidth: 0,
+                  mr: open ? 3 : "auto",
+                  justifyContent: "center",
                 }}
               >
-                <ListItemIcon
-                  sx={{
-                    minWidth: 0,
-                    mr: open ? 3 : "auto",
-                    justifyContent: "center",
-                  }}
-                >
-                  {item.icon}
-                </ListItemIcon>
-                <ListItemText
-                  primary={item.title}
-                  sx={{ opacity: open ? 1 : 0 }}
-                />
-              </ListItemButton>
-            </ListItem>
+                {item.icon}
+              </ListItemIcon>
+              <ListItemText
+                primary={item.title}
+                sx={{ opacity: open ? 1 : 0 }}
+              />
+            </ListItemButton>
           ))}
         </List>
       </Drawer>
