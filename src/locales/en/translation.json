@@ -2,9 +2,10 @@
   "appTitle": "Panda",
   "dashboard": {
     "title": "dashboard",
-    "message1": "Good morning! Have a wonderful day ahead filled with positivity, productivity, and joy. Remember to take time for yourself and do something that brings you happiness. You got this!",
-    "message2": "Good evening! I hope you had a great day filled with accomplishments and moments of happiness. Take a moment to reflect on the day and think about the things you are grateful for. Remember to take care of yourself and get some rest so you can start fresh tomorrow. Have a peaceful evening!",
-    "message3": "Good night! It's time to relax and unwind after a long day. Take a deep breath and let go of any worries or stress. Remember that tomorrow is a new day, full of new opportunities and possibilities. Get some rest, sleep well, and wake up feeling refreshed and ready to take on the day. Sweet dreams!"
+    "message1": "Good morning! Have a wonderful day ahead filled with positivity, productivity, and joy. Remember to take time for yourself and do something that brings you happiness. You got this.",
+    "message2": "Good evening! I hope you had a great day filled with accomplishments and moments of happiness. Take a moment to reflect on the day and think about the things you are grateful for. Remember to take care of yourself and get some rest so you can start fresh tomorrow. Have a peaceful evening.",
+    "message3": "Good afternoon! The day is half over, but there's still plenty of time to achieve your goals. Take a moment to recharge and enjoy the rest of the day. May it be productive and fulfilling.",
+    "message4": "Good night! It's time to relax and unwind after a long day. Take a deep breath and let go of any worries or stress. Remember that tomorrow is a new day, full of new opportunities and possibilities. Get some rest, sleep well, and wake up feeling refreshed and ready to take on the day. Sweet dreams"
   },
   "todos": {
     "title": "todos",
