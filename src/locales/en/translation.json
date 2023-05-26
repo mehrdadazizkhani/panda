@@ -19,6 +19,9 @@
     "title": "profile",
     "name": "name",
     "theme": "theme",
+    "system": "system",
+    "dark": "dark",
+    "light": "light",
     "locale": "language",
     "save": "save"
   }

@@ -1,10 +1,12 @@
+import { useContext } from "react";
+import { DataContext } from "../../context/DataProvider";
 import { Box, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 const Dashboard = () => {
   const [currentTime, setCurrentTime] = useState(new Date());
-
+  const { name } = useContext(DataContext);
   useEffect(() => {
     const intervalId = setInterval(() => {
       setCurrentTime(new Date());
@@ -41,7 +43,7 @@ const Dashboard = () => {
         variant="h4"
         sx={{ width: "50%", textTransform: "capitalize" }}
       >
-        hello {}
+        hello {name}
       </Typography>
       <Typography sx={{ width: "50%" }}>"{message}"</Typography>
     </Box>

@@ -4,7 +4,14 @@ import CloudIcon from "@mui/icons-material/Cloud";
 import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
 import PlaylistAddIcon from "@mui/icons-material/PlaylistAdd";
 import DashboardIcon from "@mui/icons-material/Dashboard";
-import { styled, useTheme, Theme, CSSObject } from "@mui/material/styles";
+import {
+  styled,
+  useTheme,
+  Theme,
+  CSSObject,
+  ThemeProvider,
+  createTheme,
+} from "@mui/material/styles";
 import Box from "@mui/material/Box";
 import MuiDrawer from "@mui/material/Drawer";
 import MuiAppBar, { AppBarProps as MuiAppBarProps } from "@mui/material/AppBar";
@@ -21,6 +28,10 @@ import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import { Outlet, useLocation, Link } from "react-router-dom";
+import { useContext, useState } from "react";
+import { DataContext } from "../../context/DataProvider";
+import { Button, Paper, TextField } from "@mui/material";
+import { Modal } from "@mui/base";
 
 const drawerWidth = 240;
 
@@ -94,8 +105,10 @@ const Drawer = styled(MuiDrawer, {
 
 export default function Layout() {
   const theme = useTheme();
+  const { mode, name, handleNameChange } = useContext(DataContext);
   const [open, setOpen] = React.useState(true);
   const { t } = useTranslation();
+  const [inputName, setInputName] = useState("");
 
   const listItems = [
     { id: 1, title: t("dashboard.title"), icon: <DashboardIcon />, to: "/" },
@@ -119,82 +132,136 @@ export default function Layout() {
     setOpen(false);
   };
 
-  return (
-    <Box sx={{ display: "flex" }}>
-      <CssBaseline />
-      <AppBar open={open}>
-        <Toolbar>
-          <IconButton
-            color="inherit"
-            aria-label="open drawer"
-            onClick={handleDrawerOpen}
-            edge="start"
-            sx={{
-              marginRight: 5,
-              ...(open && { display: "none" }),
-            }}
-          >
-            <MenuIcon />
-          </IconButton>
-          <Typography variant="h6" noWrap component="div">
-            {t(`appTitle`)}
-          </Typography>
-        </Toolbar>
-      </AppBar>
-      <Drawer variant="permanent" open={open}>
-        <DrawerHeader>
-          <IconButton onClick={handleDrawerClose}>
-            {theme.direction === "rtl" ? (
-              <ChevronRightIcon />
-            ) : (
-              <ChevronLeftIcon />
-            )}
-          </IconButton>
-        </DrawerHeader>
-        <Divider />
-        <List>
-          {listItems.map((item) => (
-            <ListItemButton
-              key={item.id}
-              selected={location.pathname === item.to}
+  const darkMode = createTheme({
+    palette: {
+      mode: mode === "dark" ? "dark" : "light",
+    },
+  });
+
+  const handleSetName = () => {
+    handleNameChange(inputName);
+  };
+
+  const style = {
+    position: "absolute" as "absolute",
+    top: "50%",
+    left: "50%",
+    transform: "translate(-50%, -50%)",
+    width: 400,
+    bgcolor: "background.paper",
+    border: "2px solid #000",
+    boxShadow: 24,
+    p: 4,
+    display: "flex",
+    flexDirection: "column",
+    gap: "20px",
+  };
+
+  return localStorage.getItem("user name") ? (
+    <ThemeProvider theme={darkMode}>
+      <Box sx={{ display: "flex" }}>
+        <CssBaseline />
+        <AppBar open={open}>
+          <Toolbar>
+            <IconButton
+              color="inherit"
+              aria-label="open drawer"
+              onClick={handleDrawerOpen}
+              edge="start"
               sx={{
-                minHeight: 48,
-                justifyContent: open ? "initial" : "center",
-                px: 2.5,
+                marginRight: 5,
+                ...(open && { display: "none" }),
               }}
-              component={Link}
-              to={item.to}
             >
-              <ListItemIcon
+              <MenuIcon />
+            </IconButton>
+            <Typography variant="h6" noWrap component="div">
+              {t(`appTitle`)}
+            </Typography>
+          </Toolbar>
+        </AppBar>
+        <Drawer variant="permanent" open={open}>
+          <DrawerHeader>
+            <IconButton onClick={handleDrawerClose}>
+              {theme.direction === "rtl" ? (
+                <ChevronRightIcon />
+              ) : (
+                <ChevronLeftIcon />
+              )}
+            </IconButton>
+          </DrawerHeader>
+          <Divider />
+          <List>
+            {listItems.map((item) => (
+              <ListItemButton
+                key={item.id}
+                selected={location.pathname === item.to}
                 sx={{
-                  minWidth: 0,
-                  mr: open ? 3 : "auto",
-                  justifyContent: "center",
+                  minHeight: 48,
+                  justifyContent: open ? "initial" : "center",
+                  px: 2.5,
                 }}
+                component={Link}
+                to={item.to}
               >
-                {item.icon}
-              </ListItemIcon>
-              <ListItemText
-                primary={item.title}
-                sx={{ opacity: open ? 1 : 0 }}
-              />
-            </ListItemButton>
-          ))}
-        </List>
-      </Drawer>
-      <Box
-        component="main"
-        sx={{
-          display: "flex",
-          flexGrow: 1,
-          p: 3,
-          pt: 11,
-          height: "100vh",
-          justifyContent: "center",
-        }}
-      >
-        <Outlet />
+                <ListItemIcon
+                  sx={{
+                    minWidth: 0,
+                    mr: open ? 3 : "auto",
+                    justifyContent: "center",
+                  }}
+                >
+                  {item.icon}
+                </ListItemIcon>
+                <ListItemText
+                  primary={item.title}
+                  sx={{ opacity: open ? 1 : 0 }}
+                />
+              </ListItemButton>
+            ))}
+          </List>
+        </Drawer>
+        <Box
+          component="main"
+          sx={{
+            display: "flex",
+            flexGrow: 1,
+            p: 3,
+            pt: 11,
+            height: "100vh",
+            justifyContent: "center",
+          }}
+        >
+          <Outlet />
+        </Box>
       </Box>
-    </Box>
+    </ThemeProvider>
+  ) : (
+    <ThemeProvider theme={darkMode}>
+      <CssBaseline />
+      <Modal open={name ? false : true}>
+        <Paper sx={{ width: "100vw", height: "100vh" }}>
+          <Box sx={style}>
+            <Typography id="modal-modal-title" variant="h6" component="h2">
+              Please enter your name
+            </Typography>
+            <TextField
+              onChange={(e) => setInputName(e.target.value)}
+              fullWidth
+              variant="outlined"
+              label={t("profile.name")}
+              value={inputName}
+            />
+            <Button
+              onClick={handleSetName}
+              disabled={!inputName ? true : false}
+              variant="contained"
+            >
+              {t("profile.save")}
+            </Button>
+          </Box>
+        </Paper>
+      </Modal>
+    </ThemeProvider>
   );
 }
