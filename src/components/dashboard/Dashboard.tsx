@@ -1,8 +1,8 @@
 import { useContext } from "react";
+import { DataContext } from "../../context/DataProvider";
 import { Box, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { DataContext } from "../../context/DataProvider";
 
 const Dashboard = () => {
   const [currentTime, setCurrentTime] = useState(new Date());

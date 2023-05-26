@@ -5,20 +5,23 @@ import TodoPage from "./pages/TodoPage";
 import WeatherPage from "./pages/WeatherPage";
 import ProfilePage from "./pages/ProfilePage";
 import PageNotFound from "./pages/PageNotFound";
+import DataProvider from "./context/DataProvider";
 
 function App() {
   return (
-    <Router>
-      <Routes>
-        <Route path="/" element={<Layout />}>
-          <Route path="/" element={<DashboardPage />} />
-          <Route path="todo" element={<TodoPage />} />
-          <Route path="weather" element={<WeatherPage />} />
-          <Route path="profile" element={<ProfilePage />} />
-          <Route path="*" element={<PageNotFound />} />
-        </Route>
-      </Routes>
-    </Router>
+    <DataProvider>
+      <Router>
+        <Routes>
+          <Route path="/" element={<Layout />}>
+            <Route path="/" element={<DashboardPage />} />
+            <Route path="todo" element={<TodoPage />} />
+            <Route path="weather" element={<WeatherPage />} />
+            <Route path="profile" element={<ProfilePage />} />
+            <Route path="*" element={<PageNotFound />} />
+          </Route>
+        </Routes>
+      </Router>
+    </DataProvider>
   );
 }
 export default App;
