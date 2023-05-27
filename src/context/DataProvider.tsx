@@ -5,18 +5,26 @@ interface DataContextInterface {
   name: string;
   mode?: string | null;
   lang?: string | null;
+  tasks: { id: string; task: string; isDone: boolean }[];
   handleNameChange: (name: string) => void;
   handleLangChange: (lang: string) => void;
   handleThemeChange: (theme: string) => void;
+  handletaskAdd: (task: { id: string; task: string; isDone: boolean }) => void;
+  handleTaskDelete: (taskID: string) => void;
+  handleTaskDone: (taskID: string) => void;
 }
 
 export const DataContext = createContext<DataContextInterface>({
   name: "",
   lang: "en",
   mode: "dark",
+  tasks: [],
   handleNameChange: () => {},
   handleLangChange: () => {},
   handleThemeChange: () => {},
+  handletaskAdd: () => {},
+  handleTaskDelete: () => {},
+  handleTaskDone: () => {},
 });
 
 interface Props {
@@ -32,14 +40,51 @@ const DataProvider = ({ children }: Props) => {
     localStorage.getItem("theme") ? localStorage.getItem("theme") : "dark"
   );
   const { i18n } = useTranslation();
+  const storedTasks = localStorage.getItem("tasks");
+  const [tasks, setTasks] = useState(
+    storedTasks ? JSON.parse(storedTasks) : []
+  );
 
   useEffect(() => {
-    i18n.changeLanguage(lang === "en" ? "en" : "fa"), [];
-  });
+    i18n.changeLanguage(lang === "en" ? "en" : "fa");
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem("tasks", JSON.stringify(tasks));
+  }, [tasks]);
 
   const handleNameChange = (name: string) => {
     setName(name);
     localStorage.setItem("user name", name);
+  };
+
+  const handletaskAdd = (task: {
+    id: string;
+    task: string;
+    isDone: boolean;
+  }) => {
+    setTasks([...tasks, task]);
+  };
+
+  const handleTaskDelete = (taskID: string) => {
+    setTasks(
+      tasks.filter(
+        (task: { id: string; task: string; isDone: boolean }) =>
+          task.id !== taskID
+      )
+    );
+  };
+
+  const handleTaskDone = (taskID: string) => {
+    setTasks(
+      tasks.map((task: { id: string; task: string; isDone: boolean }) =>
+        task.id === taskID
+          ? task.isDone === true
+            ? { ...task, isDone: false }
+            : { ...task, isDone: true }
+          : task
+      )
+    );
   };
 
   const handleLangChange = (selectedLang: string) => {
@@ -59,9 +104,13 @@ const DataProvider = ({ children }: Props) => {
         name,
         mode,
         lang,
+        tasks,
         handleNameChange,
         handleLangChange,
         handleThemeChange,
+        handletaskAdd,
+        handleTaskDelete,
+        handleTaskDone,
       }}
     >
       {children}
