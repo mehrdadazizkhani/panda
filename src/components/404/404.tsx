@@ -1,6 +1,8 @@
 import { Box, Typography } from "@mui/material";
+import { useTranslation } from "react-i18next";
 
 const Page404 = () => {
+  const { t } = useTranslation();
   return (
     <Box
       sx={{
@@ -12,7 +14,7 @@ const Page404 = () => {
       }}
     >
       <Typography variant="h6" sx={{ textTransform: "capitalize" }}>
-        page not found
+        {t("404.msg")}
       </Typography>
     </Box>
   );

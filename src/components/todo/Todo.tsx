@@ -7,7 +7,7 @@ import { DataContext } from "../../context/DataProvider";
 
 const Todo = () => {
   const [taskInput, setTaskInput] = useState("");
-  const { handletaskAdd, tasks } = useContext(DataContext);
+  const { handletaskAdd, tasks, lang } = useContext(DataContext);
   const handleAdd = () => {
     taskInput &&
       handletaskAdd({
@@ -27,7 +27,16 @@ const Todo = () => {
           label={t("todos.task")}
           value={taskInput}
         />
-        <Button onClick={handleAdd} variant="contained" endIcon={<AddIcon />}>
+        <Button
+          onClick={handleAdd}
+          variant="contained"
+          endIcon={lang !== "fa" && <AddIcon />}
+          startIcon={lang === "fa" && <AddIcon />}
+          sx={{
+            display: "flex",
+            flexDirection: lang === "fa" ? "row-reverse" : "row",
+          }}
+        >
           {t("todos.add")}
         </Button>
       </Stack>

@@ -45,6 +45,10 @@ const DataProvider = ({ children }: Props) => {
     storedTasks ? JSON.parse(storedTasks) : []
   );
 
+  lang === "fa"
+    ? (document.documentElement.dir = "rtl")
+    : (document.documentElement.dir = "ltr");
+
   useEffect(() => {
     i18n.changeLanguage(lang === "en" ? "en" : "fa");
   }, []);

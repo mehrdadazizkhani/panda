@@ -30,83 +30,13 @@ import ListItemText from "@mui/material/ListItemText";
 import { Outlet, useLocation, Link } from "react-router-dom";
 import { useContext, useState } from "react";
 import { DataContext } from "../../context/DataProvider";
-import { Button, Paper, TextField } from "@mui/material";
+import { Button, Paper, TextField, Tooltip, Zoom } from "@mui/material";
 import { Modal } from "@mui/base";
-
-const drawerWidth = 240;
-
-const openedMixin = (theme: Theme): CSSObject => ({
-  width: drawerWidth,
-  transition: theme.transitions.create("width", {
-    easing: theme.transitions.easing.sharp,
-    duration: theme.transitions.duration.enteringScreen,
-  }),
-  overflowX: "hidden",
-});
-
-const closedMixin = (theme: Theme): CSSObject => ({
-  transition: theme.transitions.create("width", {
-    easing: theme.transitions.easing.sharp,
-    duration: theme.transitions.duration.leavingScreen,
-  }),
-  overflowX: "hidden",
-  width: `calc(${theme.spacing(7)} + 1px)`,
-  [theme.breakpoints.up("sm")]: {
-    width: `calc(${theme.spacing(8)} + 1px)`,
-  },
-});
-
-const DrawerHeader = styled("div")(({ theme }) => ({
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "flex-end",
-  padding: theme.spacing(0, 1),
-  ...theme.mixins.toolbar,
-}));
-
-interface AppBarProps extends MuiAppBarProps {
-  open?: boolean;
-}
-
-const AppBar = styled(MuiAppBar, {
-  shouldForwardProp: (prop) => prop !== "open",
-})<AppBarProps>(({ theme, open }) => ({
-  zIndex: theme.zIndex.drawer + 1,
-  transition: theme.transitions.create(["width", "margin"], {
-    easing: theme.transitions.easing.sharp,
-    duration: theme.transitions.duration.leavingScreen,
-  }),
-  ...(open && {
-    marginLeft: drawerWidth,
-    width: `calc(100% - ${drawerWidth}px)`,
-    transition: theme.transitions.create(["width", "margin"], {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.enteringScreen,
-    }),
-  }),
-}));
-
-const Drawer = styled(MuiDrawer, {
-  shouldForwardProp: (prop) => prop !== "open",
-})(({ theme, open }) => ({
-  width: drawerWidth,
-  flexShrink: 0,
-  whiteSpace: "nowrap",
-  boxSizing: "border-box",
-  ...(open && {
-    ...openedMixin(theme),
-    "& .MuiDrawer-paper": openedMixin(theme),
-  }),
-  ...(!open && {
-    ...closedMixin(theme),
-    "& .MuiDrawer-paper": closedMixin(theme),
-  }),
-}));
 
 export default function Layout() {
   const theme = useTheme();
-  const { mode, name, handleNameChange } = useContext(DataContext);
-  const [open, setOpen] = React.useState(true);
+  const { mode, lang, name, handleNameChange } = useContext(DataContext);
+  const [open, setOpen] = React.useState(false);
   const { t } = useTranslation();
   const [inputName, setInputName] = useState("");
 
@@ -124,6 +54,76 @@ export default function Layout() {
 
   const location = useLocation();
 
+  const drawerWidth = 240;
+
+  const openedMixin = (theme: Theme): CSSObject => ({
+    width: drawerWidth,
+    transition: theme.transitions.create("width", {
+      easing: theme.transitions.easing.sharp,
+      duration: theme.transitions.duration.standard,
+    }),
+    overflowX: "hidden",
+  });
+
+  const closedMixin = (theme: Theme): CSSObject => ({
+    transition: theme.transitions.create("width", {
+      easing: theme.transitions.easing.sharp,
+      duration: theme.transitions.duration.standard,
+    }),
+    overflowX: "hidden",
+    width: `calc(${theme.spacing(7)} + 1px)`,
+    [theme.breakpoints.up("sm")]: {
+      width: `calc(${theme.spacing(8)} + 1px)`,
+    },
+  });
+
+  const DrawerHeader = styled("div")(({ theme }) => ({
+    display: "flex",
+    alignItems: "center",
+    justifyContent: lang === "fa" ? "flex-start" : "flex-end",
+    padding: theme.spacing(0, 1),
+    ...theme.mixins.toolbar,
+  }));
+
+  interface AppBarProps extends MuiAppBarProps {
+    open?: boolean;
+  }
+
+  const AppBar = styled(MuiAppBar, {
+    shouldForwardProp: (prop) => prop !== "open",
+  })<AppBarProps>(({ theme, open }) => ({
+    zIndex: theme.zIndex.drawer + 1,
+    transition: theme.transitions.create(["width", "margin"], {
+      easing: theme.transitions.easing.sharp,
+      duration: theme.transitions.duration.leavingScreen,
+    }),
+    ...(open && {
+      marginRight: lang === "fa" ? drawerWidth : 0,
+      width: `calc(100% - ${drawerWidth}px)`,
+      transition: theme.transitions.create(["width", "margin"], {
+        easing: theme.transitions.easing.sharp,
+        duration: theme.transitions.duration.enteringScreen,
+      }),
+    }),
+  }));
+
+  const Drawer = styled(MuiDrawer, {
+    shouldForwardProp: (prop) => prop !== "open",
+  })(({ theme, open }) => ({
+    width: drawerWidth,
+    flexShrink: 0,
+    whiteSpace: "nowrap",
+    boxSizing: "border-box",
+    ...(open && {
+      ...openedMixin(theme),
+      "& .MuiDrawer-paper": openedMixin(theme),
+    }),
+    ...(!open && {
+      ...closedMixin(theme),
+      "& .MuiDrawer-paper": closedMixin(theme),
+    }),
+  }));
+
   const handleDrawerOpen = () => {
     setOpen(true);
   };
@@ -135,6 +135,9 @@ export default function Layout() {
   const darkMode = createTheme({
     palette: {
       mode: mode === "dark" ? "dark" : "light",
+    },
+    typography: {
+      fontFamily: `${lang === "fa" ? "Vazirmatn" : "Roboto"}, sans-serif`,
     },
   });
 
@@ -159,7 +162,7 @@ export default function Layout() {
 
   return localStorage.getItem("user name") ? (
     <ThemeProvider theme={darkMode}>
-      <Box sx={{ display: "flex" }}>
+      <Box sx={{ display: "flex", flexDirection: "row-reverse" }}>
         <CssBaseline />
         <AppBar open={open}>
           <Toolbar>
@@ -167,9 +170,8 @@ export default function Layout() {
               color="inherit"
               aria-label="open drawer"
               onClick={handleDrawerOpen}
-              edge="start"
+              edge={lang === "fa" ? "end" : "start"}
               sx={{
-                marginRight: 5,
                 ...(open && { display: "none" }),
               }}
             >
@@ -180,44 +182,56 @@ export default function Layout() {
             </Typography>
           </Toolbar>
         </AppBar>
-        <Drawer variant="permanent" open={open}>
-          <DrawerHeader>
+        <Drawer
+          anchor={lang === "fa" ? "right" : "left"}
+          variant="permanent"
+          open={open}
+        >
+          <DrawerHeader dir="ltr">
             <IconButton onClick={handleDrawerClose}>
-              {theme.direction === "rtl" ? (
-                <ChevronRightIcon />
-              ) : (
-                <ChevronLeftIcon />
-              )}
+              {lang === "fa" ? <ChevronRightIcon /> : <ChevronLeftIcon />}
             </IconButton>
           </DrawerHeader>
           <Divider />
           <List>
             {listItems.map((item) => (
-              <ListItemButton
-                key={item.id}
-                selected={location.pathname === item.to}
-                sx={{
-                  minHeight: 48,
-                  justifyContent: open ? "initial" : "center",
-                  px: 2.5,
-                }}
-                component={Link}
-                to={item.to}
+              <Tooltip
+                disableHoverListener={open ? true : false}
+                disableFocusListener={open ? true : false}
+                disableTouchListener={open ? true : false}
+                TransitionComponent={Zoom}
+                title={item.title}
+                placement={lang === "fa" ? "left" : "right"}
               >
-                <ListItemIcon
+                <ListItemButton
+                  key={item.id}
+                  selected={location.pathname === item.to}
                   sx={{
-                    minWidth: 0,
-                    mr: open ? 3 : "auto",
-                    justifyContent: "center",
+                    minHeight: 48,
+                    justifyContent: open ? "flex-start" : "center",
+                    px: 2.5,
+                    gap: open ? 3 : "auto",
                   }}
+                  component={Link}
+                  to={item.to}
                 >
-                  {item.icon}
-                </ListItemIcon>
-                <ListItemText
-                  primary={item.title}
-                  sx={{ opacity: open ? 1 : 0 }}
-                />
-              </ListItemButton>
+                  <ListItemIcon
+                    sx={{
+                      minWidth: 0,
+                      justifyContent: "center",
+                    }}
+                  >
+                    {item.icon}
+                  </ListItemIcon>
+                  <ListItemText
+                    primary={item.title}
+                    sx={{
+                      opacity: open ? 1 : 0,
+                      textAlign: lang === "fa" ? "right" : "left",
+                    }}
+                  />
+                </ListItemButton>
+              </Tooltip>
             ))}
           </List>
         </Drawer>
@@ -225,11 +239,21 @@ export default function Layout() {
           component="main"
           sx={{
             display: "flex",
+            position: "absolute",
             flexGrow: 1,
             p: 3,
-            pt: 11,
-            height: "100vh",
+            height: "calc(100vh - 56px)",
+            left: lang === "fa" ? -theme.spacing(7) : theme.spacing(7),
+            width: `calc(100vw - ${theme.spacing(7)})`,
+            top: "56px",
+            [theme.breakpoints.up("sm")]: {
+              width: `calc(100vw - ${theme.spacing(8)})`,
+              left: lang === "fa" ? -theme.spacing(7) : theme.spacing(7),
+              height: "calc(100vh - 64px)",
+              top: "64px",
+            },
             justifyContent: "center",
+            alignItems: "self-start",
           }}
         >
           <Outlet />

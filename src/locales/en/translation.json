@@ -14,7 +14,7 @@
   },
   "weather": {
     "title": "weather",
-    "input": "enter a city"
+    "input": "select a city"
   },
   "profile": {
     "title": "profile",
@@ -25,5 +25,8 @@
     "light": "light",
     "locale": "language",
     "save": "save"
+  },
+  "404": {
+    "msg": "page not found"
   }
 }

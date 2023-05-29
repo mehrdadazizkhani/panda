@@ -1,25 +1,31 @@
 import { useContext, useState } from "react";
 import { DataContext } from "../../context/DataProvider";
-import { Button, Stack, TextField } from "@mui/material";
+import { Button, Stack, TextField, useTheme } from "@mui/material";
 import { useTranslation } from "react-i18next";
 
 const Profile = () => {
+  const theme = useTheme();
   const { handleNameChange, handleLangChange, handleThemeChange, mode, lang } =
     useContext(DataContext);
   const { t } = useTranslation();
-  const [theme, setTheme]: any = useState(mode);
-  const [language, setLanguage]: any = useState(lang);
   const [name, setName] = useState("");
 
   const handleSave = () => {
     handleNameChange(name);
     setName("");
-    handleLangChange(language);
-    handleThemeChange(theme);
   };
 
   return (
-    <Stack component="form" spacing={2} width="50%">
+    <Stack
+      component="form"
+      spacing={2}
+      sx={{
+        width: "100%",
+        [theme.breakpoints.up("sm")]: {
+          width: "60%",
+        },
+      }}
+    >
       <TextField
         onChange={(e) => setName(e.target.value)}
         fullWidth
@@ -27,16 +33,24 @@ const Profile = () => {
         label={t("profile.name")}
         value={name}
       />
+      <Button
+        size="large"
+        onClick={handleSave}
+        disabled={!name ? true : false}
+        variant="contained"
+      >
+        {t("profile.save")}
+      </Button>
       <TextField
         fullWidth
         select
-        defaultValue={theme}
+        defaultValue={mode}
         variant="outlined"
         label={t("profile.theme")}
         SelectProps={{
           native: true,
         }}
-        onChange={(event) => setTheme(event.target.value)}
+        onChange={(event) => handleThemeChange(event.target.value)}
       >
         <option value="dark">{t("profile.dark")}</option>
         <option value="light">{t("profile.light")}</option>
@@ -45,23 +59,16 @@ const Profile = () => {
         fullWidth
         select
         variant="outlined"
-        defaultValue={language}
+        defaultValue={lang}
         SelectProps={{
           native: true,
         }}
-        onChange={(event) => setLanguage(event.target.value)}
+        onChange={(event) => handleLangChange(event.target.value)}
         label={t("profile.theme")}
       >
         <option value="en">English</option>
         <option value="fa">Farsi</option>
       </TextField>
-      <Button
-        onClick={handleSave}
-        disabled={!name ? true : false}
-        variant="contained"
-      >
-        {t("profile.save")}
-      </Button>
     </Stack>
   );
 };

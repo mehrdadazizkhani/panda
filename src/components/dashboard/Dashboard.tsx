@@ -1,12 +1,13 @@
 import { useContext } from "react";
 import { DataContext } from "../../context/DataProvider";
-import { Box, Typography } from "@mui/material";
+import { Box, Typography, useTheme } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 const Dashboard = () => {
   const [currentTime, setCurrentTime] = useState(new Date());
-  const { name } = useContext(DataContext);
+  const { name, lang } = useContext(DataContext);
+  const theme = useTheme();
   useEffect(() => {
     const intervalId = setInterval(() => {
       setCurrentTime(new Date());
@@ -34,18 +35,37 @@ const Dashboard = () => {
     <Box
       sx={{
         display: "flex",
+        width: "100%",
+        height: "100%",
         flexDirection: "column",
+        justifyContent: "center",
         alignItems: "center",
+        gap: 1,
+        [theme.breakpoints.up("sm")]: {
+          gap: 4,
+          width: "50%",
+        },
       }}
     >
-      <Typography variant="h2">{currentTime.toLocaleTimeString()}</Typography>
+      <Typography
+        variant="h2"
+        sx={{
+          width: "100%",
+          fontSize: 30,
+          [theme.breakpoints.up("sm")]: {
+            fontSize: 60,
+          },
+        }}
+      >
+        {currentTime.toLocaleTimeString()}
+      </Typography>
       <Typography
         variant="h4"
-        sx={{ width: "50%", textTransform: "capitalize" }}
+        sx={{ width: "100%", textTransform: "capitalize" }}
       >
-        hello {name}
+        {lang === "fa" ? "سلام" : "Hello"} {name}
       </Typography>
-      <Typography sx={{ width: "50%" }}>"{message}"</Typography>
+      <Typography sx={{ width: "100%" }}>"{message}"</Typography>
     </Box>
   );
 };
